@@ -167,8 +167,9 @@ grep -q "admin:" ${FILES_PATH} && sed -i 's/admin:.*/admin::0:0:99999:7:::/g' "$
 
 # 添加自定义插件源
 srcdir="$(mktemp -d)"
-SRC_LIANJIE=$(grep -Po '^src-git(?:-full)?\s+luci\s+\Khttps?://[^;\s]+' "${LICENSES_DOC}/feeds.conf.default")
-SRC_FENZHIHAO=$(grep -Po '^src-git(?:-full)?\s+luci\s+[^;\s]+;\K[^\s]+' "${LICENSES_DOC}/feeds.conf.default" || echo "")
+# 修复git URL解析，支持分号(;)和脱字符(^)两种commit hash分隔方式
+SRC_LIANJIE=$(grep -Po '^src-git(?:-full)?\s+luci\s+\Khttps?://[^;^\s]+' "${LICENSES_DOC}/feeds.conf.default")
+SRC_FENZHIHAO=$(grep -Po '^src-git(?:-full)?\s+luci\s+https?://[^;^\s]+[;^]\K[^\s]+' "${LICENSES_DOC}/feeds.conf.default" || echo "")
 if [[ -n "${SRC_FENZHIHAO}" ]]; then
   git clone --single-branch --depth=1 --branch="${SRC_FENZHIHAO}" "${SRC_LIANJIE}" "${srcdir}"
 else
@@ -665,7 +666,8 @@ else
 fi
 
 if [[ "${OpenClash_branch}" =~ (1|2) ]]; then
-  CLASH_BRANCH=$(grep -Po '^src-git(?:-full)?\s+OpenClash\s+[^;\s]+;\K[^\s]+' "${HOME_PATH}/feeds.conf.default" || echo "")
+  # 修复OpenClash URL解析，支持分号(;)和脱字符(^)两种commit hash分隔方式
+  CLASH_BRANCH=$(grep -Po '^src-git(?:-full)?\s+OpenClash\s+https?://[^;^\s]+[;^]\K[^\s]+' "${HOME_PATH}/feeds.conf.default" || echo "")
   echo -e "\nCONFIG_PACKAGE_luci-app-openclash=y" >> ${HOME_PATH}/.config
   echo "增加luci-app-openclash(${CLASH_BRANCH})完成"
 else
