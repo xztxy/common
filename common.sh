@@ -176,7 +176,7 @@ if [[ -n "${SRC_FENZHIHAO}" ]]; then
   git clone --depth=1 "${SRC_LIANJIE}" "${srcdir}"
   # 如果是commit hash，切换到指定的commit
   if [[ "${SRC_FENZHIHAO}" =~ ^[0-9a-f]{40}$ ]]; then
-    cd "${srcdir}" && git checkout "${SRC_FENZHIHAO}" --depth=1
+    cd "${srcdir}" && git checkout "${SRC_FENZHIHAO}"
     cd - > /dev/null
   else
     # 如果是分支名称，重新克隆指定分支
@@ -401,6 +401,11 @@ fi
 
 
 function Diy_MT798X() {
+cd ${HOME_PATH}
+}
+
+
+function Diy_FANCHMWRT() {
 cd ${HOME_PATH}
 }
 
