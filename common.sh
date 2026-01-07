@@ -170,8 +170,19 @@ srcdir="$(mktemp -d)"
 # 修复git URL解析，支持分号(;)和脱字符(^)两种commit hash分隔方式
 SRC_LIANJIE=$(grep -Po '^src-git(?:-full)?\s+luci\s+\Khttps?://[^;^\s]+' "${LICENSES_DOC}/feeds.conf.default")
 SRC_FENZHIHAO=$(grep -Po '^src-git(?:-full)?\s+luci\s+https?://[^;^\s]+[;^]\K[^\s]+' "${LICENSES_DOC}/feeds.conf.default" || echo "")
+# 修复git clone无法处理commit hash的问题
 if [[ -n "${SRC_FENZHIHAO}" ]]; then
-  git clone --single-branch --depth=1 --branch="${SRC_FENZHIHAO}" "${SRC_LIANJIE}" "${srcdir}"
+  # 先克隆仓库，不指定分支
+  git clone --depth=1 "${SRC_LIANJIE}" "${srcdir}"
+  # 如果是commit hash，切换到指定的commit
+  if [[ "${SRC_FENZHIHAO}" =~ ^[0-9a-f]{40}$ ]]; then
+    cd "${srcdir}" && git checkout "${SRC_FENZHIHAO}" --depth=1
+    cd - > /dev/null
+  else
+    # 如果是分支名称，重新克隆指定分支
+    rm -rf "${srcdir}"
+    git clone --single-branch --depth=1 --branch="${SRC_FENZHIHAO}" "${SRC_LIANJIE}" "${srcdir}"
+  fi
 else
   git clone --depth=1 "${SRC_LIANJIE}" "${srcdir}"
 fi
