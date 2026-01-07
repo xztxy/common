@@ -407,16 +407,16 @@ cd ${HOME_PATH}
 function Diy_FANCHMWRT() {
 cd ${HOME_PATH}
 }
-
-
 function Diy_partsh() {
-TIME y "正在执行：自定义文件"
-cd ${HOME_PATH}
-# 运行自定义文件
-${DIY_PT1_SH}
-./scripts/feeds update -a &>/dev/null
-}
-
+  TIME y "正在执行：自定义文件"
+  cd ${HOME_PATH}
+  # 执行自定义文件 ${DIY_PT1_SH}
+  if [[ -f "${DIY_PT1_SH}" ]]; then
+    chmod +x "${DIY_PT1_SH}"
+    bash "${DIY_PT1_SH}"
+  fi
+  ./scripts/feeds update -a &>/dev/null
+  }
 
 function Diy_scripts() {
 TIME y "正在执行：更新和安装feeds"
