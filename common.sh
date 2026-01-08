@@ -67,6 +67,14 @@ OFFICIAL)
   variable LUCI_EDITION="$(echo "${REPO_BRANCH}" |sed 's/openwrt-//g')"
   variable GENE_PATH="${HOME_PATH}/package/base-files/files/bin/config_generate"
 ;;
+FANCHMWRT)
+  variable REPO_URL="https://github.com/fanchmwrt/fanchmwrt"
+  variable SOURCE="Fanchmwrt"
+  variable SOURCE_OWNER="fanchmwrt"
+  variable DISTRIB_SOURCECODE="fanchmwrt"
+  variable LUCI_EDITION="$(echo "${REPO_BRANCH}" |sed 's/openwrt-//g' |sed 's/fanchmwrt-//g')"
+  variable GENE_PATH="${HOME_PATH}/package/base-files/files/bin/config_generate"
+;;
 MT798X)
   if [[ "${REPO_BRANCH}" == "hanwckf-21.02" ]]; then
     echo "hanwckf-21.02"
@@ -93,14 +101,7 @@ MT798X)
     variable GENE_PATH="${HOME_PATH}/package/base-files/files/bin/config_generate"
   fi
 ;;
-FANCHMWRT)
-  variable REPO_URL="https://github.com/fanchmwrt/fanchmwrt"
-  variable SOURCE="Fanchmwrt"
-  variable SOURCE_OWNER="fanchmwrt"
-  variable DISTRIB_SOURCECODE="fanchmwrt"
-  variable LUCI_EDITION="$(echo "${REPO_BRANCH}" |sed 's/openwrt-//g' |sed 's/fanchmwrt-//g')"
-  variable GENE_PATH="${HOME_PATH}/package/base-files/files/bin/config_generate"
-;;
+
 *)
   TIME r "不支持${SOURCE_CODE}此源码，当前只支持COOLSNOWWOLF、LIENOL、IMMORTALWRT、XWRT、OFFICIAL、MT798X、FANCHMWRT"
   exit 1
