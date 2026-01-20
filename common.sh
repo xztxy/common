@@ -405,9 +405,6 @@ cd ${HOME_PATH}
 }
 
 
-function Diy_FANCHMWRT() {
-cd ${HOME_PATH}
-}
 function Diy_partsh() {
   TIME y "正在执行：自定义文件"
   cd ${HOME_PATH}
@@ -416,8 +413,16 @@ function Diy_partsh() {
     chmod +x "${DIY_PT1_SH}"
     bash "${DIY_PT1_SH}"
   fi
-  ./scripts/feeds update -a &>/dev/null
+  # 添加错误处理
+  ./scripts/feeds update -a &>/dev/null || {
+    echo "feeds 更新失败，尝试重新更新"
+    ./scripts/feeds clean
+    ./scripts/feeds update -a || {
+      echo "feeds 更新仍然失败，但继续执行"
+      return 0  # 不退出，继续执行
+    }
   }
+}
 
 function Diy_scripts() {
 TIME y "正在执行：更新和安装feeds"
